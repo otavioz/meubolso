@@ -1,0 +1,5 @@
+﻿creds.py
+*.log
+*.txt
+/keys
+test.py
