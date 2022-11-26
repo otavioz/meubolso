@@ -1,6 +1,7 @@
 ﻿from __future__ import print_function
 import pickle
 import consts as CONS
+import creds
 import os.path
 from datetime import datetime
 from googleapiclient.discovery import build
@@ -13,7 +14,7 @@ class GSheets:
     # created automatically when the authorization flow completes for the first
     # time.
     def __init__(self):
-        self.sheet_id = CONS.SPREADSHEET_ID
+        self.sheet_id = creds.spreadsheet_id
         if os.path.exists('token.pickle'):
             with open('token.pickle', 'rb') as token:
                 self.creds = pickle.load(token)

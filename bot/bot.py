@@ -1,4 +1,5 @@
 ﻿import consts as CONS
+import creds
 from bot.chat import Chat,Message
 import orchestrator.orchestrator as Orch
 from googleapiclient import errors
@@ -18,7 +19,7 @@ import traceback
 class Bot:
 
     def __init__(self):
-        self.token = CONS.OTABOT_TOKEN
+        self.token = creds.bot_token
         self.base = "https://api.telegram.org/bot{}/".format(self.token)
         self.update_id = None
         self.chats = {} # {chat_id: Chat()}
