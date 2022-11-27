@@ -3,6 +3,7 @@ from google.gsheets import GSheets
 import consts as CONS
 from finances.nubank import Nubank
 from finances.debts import Debts
+import finances.gsheets as GS
 import configparser
 
 class Finances:
@@ -12,16 +13,6 @@ class Finances:
         self.nu = Nubank()
         self.db = configparser.ConfigParser()
         self.db_name = CONS.DB_FILE_NAME
-        self.sheet_model= {
-            'nome':'A14',
-            'origem':'B14',
-            'valor':'C14',
-            'categoria':'D14',
-            'data':'E14',
-            'ref':'F14',
-            'obs':'G14',
-            'resp':'H14'
-        }
         
         self.sheet_data={
             'nucard':'E4',
@@ -64,28 +55,23 @@ class Finances:
         return list_c
         
     def save_debt(self,debts,list_=False):
-        tab = CONS.REF_YEAR
-        range_list = list(self.sheet_model.values())
-        range_ = f'{tab}!{range_list[0]}:{range_list[-1]}000'
-        self.gsheets.append(debts,range_,list_=list_)
+        self.gsheets.append(debts,GS.Debts.table,list_=list_)
     
     def read_debts(self,month=None):
-        #TODO MODEL para usar nome=d['nome'] ao invés de posição
         month = CONS.MONTHS[self.get_actual_month()] if month==None else CONS.MONTHS[month]
-        range_list = list(self.sheet_model.values())
-        range_ = f'{CONS.REF_YEAR}!{range_list[0]}:{range_list[-1]}000'
+        model = GS.Debts
         d_list = []
-        for d in self.gsheets.get(range_,majorDimension='ROWS')['values']:
-            if d[5] ==  month:
+        for d in self.gsheets.get(model.table,majorDimension='ROWS')['values']:
+            if d[model.ref] ==  month:
                 d_list.append(Debts(
-                        nome=d[0],
-                        origem=d[1],
-                        valor=d[2],
-                        categoria=d[3],
-                        data=d[4],
-                        ref=d[5],
-                        obs=d[6] if len(d)>6 else '',
-                        resp=d[7] if len(d)>7 else ''))
+                        nome=d[model.name],
+                        origem=d[model.origin],
+                        valor=d[model.value],
+                        categoria=d[model.category],
+                        data=d[model.date],
+                        ref=d[model.ref],
+                        obs=d[model.obs] if len(d)>6 else '',
+                        resp=d[model.resp] if len(d)>7 else ''))
         return d_list
 
     def get_all(self):
@@ -94,9 +80,12 @@ class Finances:
     def summary(self,type=None):
         pass
 
-    def monthly_limit(self):
-        range_ = f'Geral!I3'
-        return int(self.gsheets.get(range_)['values'][0][0])
+    def monthly_limit(self,origin='Nubank'):
+        model = GS.Limits
+        for l in self.gsheets.get(model.table,majorDimension='ROWS')['values']:
+            if l[model.name] == origin:
+                return float(l[model.max_value])
+        return 0
 
     def get_card_statements(self,date=None):
         close_day = self.__get_last_cs() if date == None else date
@@ -111,7 +100,7 @@ class Finances:
                     bills_list.append(Debts(
                     nome=t['description'],
                     origem="Nubank",
-                    valor=float(t['amount'])/100,
+                    valor=-float(t['amount'])/100,
                     categoria=t['title'],
                     data=date,
                     ref = ref,

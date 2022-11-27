@@ -77,7 +77,7 @@ class FO:
             #"invoice":"Extrato",
             "ins":"Inserir últimas transações",
             "inv":"Visualizar fatura do mês",
-            "limit":"Alterar limite de consumo",
+            "li":"Alterar limite de consumo",
             "day":"Alterar dia de fechamento da fatura Nubank",
             "/cancel":"Nenhuma das opções"}
 
@@ -98,7 +98,6 @@ class FO:
     
     def get_summary(self):
         bill_list = self.f.list_origem()
-        count_list = self.f.list_origem()
         cat_list = self.f.list_cat()
 
         limite = self.f.monthly_limit()
@@ -106,25 +105,24 @@ class FO:
         weighty = debts[0]
         for bill in debts:
             bill_list[bill.origem] += bill.valor
-            count_list[bill.origem] += 1
             if bill.origem == 'Nubank':
                 cat_list[bill.categoria] += bill.valor
-                if bill.valor > weighty.valor:
+                if bill.valor < weighty.valor:
                     weighty = bill
 
-        cat_list = sorted(cat_list.items(), key=lambda kv: kv[1], reverse=True)
+        cat_list = sorted(cat_list.items(), key=lambda kv: kv[1], reverse=False)
 
         #TODO a maior numero de compras por categoria, soma do valor e nome da categoria
-        amount = round(bill_list["Nubank"] / limite * 100,2)
+        amount = round(-bill_list["Nubank"] / limite * 100,2)
         now_day = int(datetime.now().strftime("%d"))
         if now_day <= 16:
             data = str(round((now_day + 14)/30*100,2))
         else:
             data = str(round((now_day - 16)/30*100,2))
 
-        message = f'Fatura do Nubank no valor de R${round(bill_list["Nubank"],2)}, cerca de {amount}% do limite de R${limite} no período de {data}% do mês.'\
-            f'\nCompra mais significativa é a <b>{weighty.nome}</b> no valor de R${weighty.valor} feita no dia {weighty.data.strftime("%d/%m/%Y")}.'\
-            f'\n<b>{cat_list[0][0]}</b> foi a categoria com mais gastos, totalizando R${cat_list[0][1]}.'\
+        message = f'Fatura do Nubank no valor de R${round(-bill_list["Nubank"],2)}, cerca de {amount}% do limite de R${limite} no período de {data}% do mês.'\
+            f'\nCompra mais significativa é a <b>{weighty.nome}</b> no valor de R${-weighty.valor} feita no dia {weighty.data.strftime("%d/%m/%Y")}.'\
+            f'\n<b>{cat_list[0][0]}</b> foi a categoria com mais gastos, totalizando R${-cat_list[0][1]}.'\
             f'\nTransações na NuConta totalizam R${-bill_list["Nuconta"]}.'
         return message
 

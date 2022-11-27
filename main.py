@@ -18,7 +18,4 @@ if creds.env == 'PROD':
     print("[New thread started]")
 
 while True:
-    #try:
     bot.get_updates()
-    #except Exception as e:
-    #    logging.error(f'{datetime.now()} - Erro no processamento. {e}')

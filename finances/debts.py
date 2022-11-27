@@ -1,6 +1,7 @@
 ﻿import json
 import consts as CONS
 from google.gsheets import GSheets
+import finances.gsheets as GS
 from datetime import datetime
 import configparser
 import re
@@ -8,6 +9,7 @@ import re
 DB = configparser.ConfigParser()
 DB_NAME = CONS.DB_FILE_NAME
 
+#TODO Resgate de fundo é ENTRADA
 class Debts:
 
     def __init__(self,**kwargs):
@@ -41,6 +43,7 @@ class Debts:
     @obs.setter #TODO flexibilizar
     def obs(self,pre_det):
         if isinstance(pre_det,str):
+            pre_det = re.sub(r"[\n\t]*", "", pre_det)           
             self._obs += pre_det
         elif isinstance(pre_det,dict):
             det = []
@@ -103,8 +106,7 @@ class Debts:
                 self._data = datetime.now()
 
     def save_category(self,cat):
-        range_ = f'Geral!M2:M35'
-        GSheets().append([cat],range_)
+        GSheets().append([cat],GS.Categories.table)
         cats = self.get_category()
         cats.update({cat:[]})
         DB.read(DB_NAME)
