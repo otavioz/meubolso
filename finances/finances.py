@@ -122,8 +122,12 @@ class Finances:
     def get_bank_statement(self,date=None):
         close_day = self.__get_last_bs() if date == None else date
         bs_list = []
+        date = close_day
         cd = self.get_close_day()
-        for t in self.nu.get_transactions():
+        transactions = self.nu.get_transactions()
+        page_info = transactions['pageInfo'] #TODO implementar auto paginação
+        for t in transactions['edges']:
+            t = t['node']
             date = datetime.strptime(t['postDate'],"%Y-%m-%d")
             if date.date() >= close_day.date():
                     ref = date.month if date.day < cd else date.month + 1
@@ -131,11 +135,11 @@ class Finances:
                     bs_list.append(Debts(
                     nome=t['title'],
                     origem="Nuconta",
-                    valor=float(t['amount']),
-                    categoria=t['__typename'],
+                    valor=float(t['amount']) if t['kind'] == 'POSITIVE' else -float(t['amount']),
+                    categoria='movimentação', #TODO implementar categoria
                     data=date,
                     ref = ref,
-                    details=t['detail']).to_list())
+                    details=f'{t["footer"]} - {t["detail"]}').to_list())
         self.__save_last_date('last_bank_statement',datetime.now())
         return bs_list
 

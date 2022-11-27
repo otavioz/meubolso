@@ -5,6 +5,8 @@ import consts as CONS
 import creds
 import threading
 
+#TODO informar pagamento fatura
+
 bot = Bot()
 logging.basicConfig(filename=f'execution_{creds.env}.log', level=logging.INFO)
 

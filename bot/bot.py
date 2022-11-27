@@ -10,9 +10,6 @@ import time as ttime
 import logging
 import traceback
 
-#TODO Subir para GIT PRIVADO
-#TODO criptografia credenciais nubank
-#TODO checkin automático Oracle
 
 # https://api.telegram.org/bot1118783038:AAE8OQ4KX63PoURwi360wZRj32d0mcgBbOI/getUpdates
 

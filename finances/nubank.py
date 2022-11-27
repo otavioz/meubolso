@@ -18,7 +18,7 @@ class Nubank:
         return self.nu.get_card_statements()
     
     def get_transactions(self):
-        return self.nu.get_account_statements()
-    
+        return self.nu.get_account_statements_paginated()
+
     def get_bill_details(self,debt):
         return self.nu.get_card_statement_details(debt)

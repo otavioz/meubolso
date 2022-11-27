@@ -12,8 +12,8 @@ class FO:
 
     def insert_last_bills(self):
         bs = []
-        #Desativado pois não pega transações PIX
-        #bs.extend(self.f.get_bank_statement())
+        
+        bs.extend(self.f.get_bank_statement())
         bs.extend(self.f.get_card_statements())
         bs = sorted(bs, key=lambda kv: datetime.strptime(kv[4], '%d/%m/%Y'), reverse=True)
         self.f.save_debt(bs,list_=True)

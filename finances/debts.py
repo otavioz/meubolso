@@ -3,7 +3,7 @@ import consts as CONS
 from google.gsheets import GSheets
 from datetime import datetime
 import configparser
-
+import re
 
 DB = configparser.ConfigParser()
 DB_NAME = CONS.DB_FILE_NAME
@@ -53,7 +53,7 @@ class Debts:
     @property
     def categoria(self):
         return self._categoria
-    '''
+    ''' #TODO checagem agora é pelo KIND
     # Soma de todas as transações na NuConta
     # Observacão: As transações de saída não possuem o valor negativo, então deve-se olhar a propriedade "__typename".
     # TransferInEvent = Entrada
@@ -65,10 +65,7 @@ class Debts:
         categories = self.get_category()
         if a is None:
             a = 'nao categorizado'
-            
-        if a == 'TransferInEvent':
-            self.valor = -self._valor
-            
+        a = re.sub(r"[\n\t]*", "", a)           
         for key,cat in categories.items():
             if a in cat or a == key:
                 a = key
