@@ -5,13 +5,13 @@ import creds
 
 class Nubank:
 
-    def __init__(self):
-        if creds.env == 'DEV':
-            self.nu = Nu(MockHttpClient()) #Ambiente de TESTE
-            self.prod = False
-        else:
+    def __init__(self,prod=False):
+        if creds.env == 'PROD' or prod:
             self.nu = Nu()                #Ambiente de Produção
             self.prod = True
+        else:
+            self.nu = Nu(MockHttpClient()) #Ambiente de TESTE
+            self.prod = False
         self.nu.authenticate_with_cert(creds.nu_log, creds.nu_pas, 'keys/cert.p12')
 
     def get_bills(self):

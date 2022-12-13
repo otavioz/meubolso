@@ -102,6 +102,8 @@ class FO:
 
         limite = self.f.monthly_limit()
         debts = self.f.read_debts()
+        if len(debts) == 0:
+            return 'Nenhum registro de gasto encontrado.'
         weighty = debts[0]
         for bill in debts:
             bill_list[bill.origem] += bill.valor

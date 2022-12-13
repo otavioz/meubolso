@@ -45,7 +45,7 @@ class Bot:
             url = url + "&offset={}".format(self.update_id + 1)
         resp = json.loads(requests.get(url).content.decode('utf-8'))
         if not resp["ok"]:
-            logging.error(f'{datetime.now()} - Erro chamar getUpdates: {resp}')
+            logging.error(f'{datetime.now()} - Retorno getUpdates: {resp}')
         else:
             for result in resp["result"]:
                 message = Message()

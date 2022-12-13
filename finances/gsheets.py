@@ -1,6 +1,8 @@
 ﻿
+import creds
+
 base = 'Geral'
-debt = '2022'
+debt = '2022' if creds.env == 'PROD' else 'Teste'
 
 class Arrears:
     table = f'{base}!B5:F35'
@@ -19,8 +21,8 @@ class Limits:
 
 class Categories:
     table = f'{base}!M4:P35'
-    is_active = 0
-    name = 1
+    name = 0 
+    is_active = 1
     value_1 = 2
     value_2 = 3
 
