@@ -125,6 +125,6 @@ class FO:
         message = f'Fatura do Nubank no valor de R${round(-bill_list["Nubank"],2)}, cerca de {amount}% do limite de R${limite} no período de {data}% do mês.'\
             f'\nCompra mais significativa é a <b>{weighty.nome}</b> no valor de R${-weighty.valor} feita no dia {weighty.data.strftime("%d/%m/%Y")}.'\
             f'\n<b>{cat_list[0][0]}</b> foi a categoria com mais gastos, totalizando R${-cat_list[0][1]}.'\
-            f'\nTransações na NuConta totalizam R${-bill_list["Nuconta"]}.'
+            f'\nTransações na NuConta totalizam R${-round(bill_list["Nuconta"],2)}.'
         return message
 

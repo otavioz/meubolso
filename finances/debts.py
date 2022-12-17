@@ -55,12 +55,12 @@ class Debts:
 
         elif isinstance(pre_det,dict):
             det = []
-            if 'tags' in pre_det:
+            if 'tags' in pre_det and pre_det['tags'] is not None:
                 det.append('Tags:' + ','.join(pre_det['tags']))
-            if 'footer' in pre_det:
-                det.append(pre_det['footer'])
-            if 'detail' in pre_det:
-                det.append(pre_det['detail'])
+            if 'footer' in pre_det and pre_det['footer'] is not None:
+                det.append(str(pre_det['footer']).replace('\n',' '))
+            if 'detail' in pre_det and pre_det['detail'] is not None:
+                det.append(str(pre_det['detail']).replace('\n',' '))
             self._obs = ' | '.join(det)
 
     @property
