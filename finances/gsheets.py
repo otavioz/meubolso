@@ -1,8 +1,6 @@
 ﻿
-import creds
-
 base = 'Geral'
-debt = '2022' if creds.env == 'PROD' else 'Teste'
+debt = '2023'
 
 class Arrears:
     table = f'{base}!B5:F35'
