@@ -4,5 +4,5 @@
 test.py
 /docs
 token.pickle
-.cfg
+*.cfg
 /db
